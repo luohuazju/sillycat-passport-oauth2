@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
@@ -9,10 +10,24 @@ const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
 const app = express();
 app.use(express.static(__dirname));
 app.use(passport.initialize());
 app.use(passport.session());
+
+//google
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    return cb(null, profile);
+  }
+));
 
 //facebook
 passport.use(new FacebookStrategy({
@@ -57,9 +72,15 @@ app.get('/auth/facebook/callback',
   	});
 
 app.get('/auth/github', passport.authenticate('github'));
-
 app.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/error' }),
+  function(req, res) {
+    res.redirect('/success');
+  });
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/error' }),
   function(req, res) {
     res.redirect('/success');
   });
