@@ -1,0 +1,25 @@
+{
+  "name": "sillycat-passport-oauth2",
+  "version": "1.0.0",
+  "description": "sample for oauth2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luohuazju/sillycat-passport-oauth2.git"
+  },
+  "author": "Carl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luohuazju/sillycat-passport-oauth2/issues"
+  },
+  "homepage": "https://github.com/luohuazju/sillycat-passport-oauth2#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-github": "^1.1.0"
+  }
+}
