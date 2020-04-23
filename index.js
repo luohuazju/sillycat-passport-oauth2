@@ -3,6 +3,7 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const TwitterStrategy = require('passport-twitter').Strategy;
 
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
@@ -13,10 +14,31 @@ const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
+const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
+const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET;
+
+
 const app = express();
 app.use(express.static(__dirname));
 app.use(passport.initialize());
 app.use(passport.session());
+const expressSession = require('express-session')({
+  secret: 'mydemosecret',
+  resave: false,
+  saveUninitialized: false
+});
+app.use(expressSession);
+
+//twitter
+passport.use(new TwitterStrategy({
+    consumerKey: TWITTER_CLIENT_ID,
+    consumerSecret: TWITTER_CLIENT_SECRET,
+    callbackURL: "http://localhost:3000/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, cb) {
+    return cb(null, profile);
+  }
+));
 
 //google
 passport.use(new GoogleStrategy({
@@ -81,6 +103,14 @@ app.get('/auth/github/callback',
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
 app.get('/auth/google/callback', 
   passport.authenticate('google', { failureRedirect: '/error' }),
+  function(req, res) {
+    res.redirect('/success');
+  });
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+
+app.get('/auth/twitter/callback', 
+  passport.authenticate('twitter', { failureRedirect: '/error' }),
   function(req, res) {
     res.redirect('/success');
   });
