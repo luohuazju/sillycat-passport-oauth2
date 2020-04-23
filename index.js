@@ -3,11 +3,11 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
 
-const FACEBOOK_APP_ID = env.process.FACEBOOK_APP_ID;
-const FACEBOOK_APP_SECRET = env.process.FACEBOOK_APP_SECRET;
+const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 
-const GITHUB_CLIENT_ID = env.process.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = env.process.GITHUB_CLIENT_SECRET;
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
 const app = express();
 app.use(express.static(__dirname));
